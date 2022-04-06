@@ -1,0 +1,47 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.6'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+apply plugin: 'idea'
+apply plugin: 'java-library'
+apply plugin: "groovy"
+
+
+group = 'com.kata'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // TESTING Spock libs
+    testImplementation "org.codehaus.groovy:groovy:3.0.7"
+    testImplementation platform("org.spockframework:spock-bom:2.0-M4-groovy-3.0")
+    testImplementation "org.spockframework:spock-core"
+    testImplementation "org.hamcrest:hamcrest-core:2.2"
+    // allows mocking of classes (in addition to interfaces)
+    testRuntimeOnly "net.bytebuddy:byte-buddy:1.10.20"
+    // allows mocking of classes without default constructor (together with ByteBuddy or CGLIB)
+    testRuntimeOnly "org.objenesis:objenesis:3.1"
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+//add integrationTest task (created automatically by sourceset) to extends base test
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom runtimeOnly
+}
+
+
